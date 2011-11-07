@@ -1,0 +1,11 @@
+--- /tmp/tcp1.c	2008-10-02 23:17:10.000000000 +0530
++++ /tmp/tcp2.c	2008-10-02 23:21:03.000000000 +0530
+@@ -696,6 +696,8 @@
+   free(streams_pool);
+   streams_pool = NULL;
+   /* FIXME: anything else we should free? */
++  /* yes plz.. */
++  tcp_latest = tcp_oldest = NULL;
+ }
+ 
+ void

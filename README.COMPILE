@@ -1,0 +1,18 @@
+= Howto Compile =
+
+By default Makefile will try to link against libnids-1.23 in the current
+directory because of the custom patches (bug fixes) in libnids.
+
+So before you try to compile, go to ./libnids-1.23:
+   ./configure --enable-shared --disable-libglib
+   make
+
+Then go to wireplay root:
+   make
+
+In case compilation fails, try to tickle around with the variables in Makefile
+or drop a bug report to AUTHORS
+
+In case wireplay crashes everytime, most probably you are linked against system
+libnids, verify:
+   ldd ./wireplay

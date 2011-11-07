@@ -1,0 +1,13 @@
+* wireplay crashes after ~750 runs (-c 100000)
+
+#0  process_tcp (data=0x80a2dd0 "E", skblen=264) at tcp.c:272
+272         for (i = tcp_oldest->listeners; i; i = i->next)
+(gdb) x/i $eip
+0x804e4a1 <process_tcp+721>:    mov    0x10(%eax),%ebx
+(gdb) x/x $eax
+0x0:    Cannot access memory at address 0x0
+(gdb)
+
+Looks like a bug *again* in libnids.
+
+

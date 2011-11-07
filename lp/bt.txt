@@ -1,0 +1,26 @@
+Program received signal SIGSEGV, Segmentation fault.
+0x0804b375 in add_new_tcp (this_tcphdr=0x8051030, this_iphdr=0x805101c) at
+tcp.c:307
+307         tcp_latest->prev_time = a_tcp;
+(gdb) bt
+#0  0x0804b375 in add_new_tcp (this_tcphdr=0x8051030, this_iphdr=0x805101c) at
+tcp.c:307
+#1  0x0804c3de in process_tcp (data=0x805101c "E", skblen=248) at tcp.c:750
+#2  0x08049ea2 in gen_ip_proc (data=0x805101c "E", skblen=248) at libnids.c:450
+#3  0x08049d07 in gen_ip_frag_proc (data=0x805101c "E", len=60) at libnids.c:402
+#4  0x080498f1 in call_ip_frag_procs (data=0x805101c, caplen=60) at
+libnids.c:198
+#5  0x08049b35 in nids_pcap_handler (par=0x0, hdr=0xbfd7b4dc, data=0x805100c "")
+at libnids.c:357
+#6  0xb7eef6cb in pcap_offline_read () from /usr/lib/libpcap.so.0.8
+#7  0xb7ee2b31 in pcap_loop () from /usr/lib/libpcap.so.0.8
+#8  0x0804a443 in nids_run () at libnids.c:689
+#9  0x080493e9 in w_get_session_idents () at src/wireplay.c:132
+#10 0x0804943f in w_nids_init () at src/wireplay.c:164
+#11 0x08049461 in main () at src/wireplay.c:178
+(gdb) x/x tcp_latest
+0xb7d4f008:     Cannot access memory at address 0xb7d4f008
+(gdb) x/x tcp_oldest
+0xb7d4f008:     Cannot access memory at address 0xb7d4f008
+(gdb) 
+

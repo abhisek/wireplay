@@ -1,0 +1,32 @@
+* Automated PoC generation from TCP session (pcap dump) <DONE>
+
+* Simulate option
+   * Simulate a replay session without actually connect/send/recv, this is
+     useful for PoC generation and other analysis work
+
+* Server
+   * Implement Wireplay to act also in Server role <DONE>
+
+* Error Event
+   * In case of sigpipe or other relevant errors, it should be notified to 
+     hooks
+   
+   * Sigpipe
+   * Socket timeout  <DONE>
+
+* Ruby Hook debugging support
+   * Before passing control to Ruby script, handle possible exceptions and print
+     Ruby backtrace
+
+* Ruby Save Slot
+   * Implement class (library) to manage data slot saving and writing
+   * SQLite3 based replay session store?
+
+* CGEN doesn't work when in server role <FIXED>
+
+* Add support for connect(..) retry after fixed interval <DONE>
+   -r               ENABLE connect retry after certain interval
+   -R   [COUNT]     No. of times to attempt retry (default: 3)
+
+* Build scripts based on GNU auto tools
+
