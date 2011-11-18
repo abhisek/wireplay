@@ -1,4 +1,5 @@
-= Wireplay =
+Wireplay
+========
 
 A minimalist approach to replay pcap dumped TCP sessions with modification as
 required.
@@ -16,36 +17,39 @@ a certain degree of fuzz testing.
 It also won't work out of the box for certain non-deterministic sessions like
 say:
 
-** Original **
+* Original 
 
-   C> GET /abc.tar.gz HTTP/1.1\r\n...
-   S> HTTP 404 Not Found
-   ...
+    C> GET /abc.tar.gz HTTP/1.1\r\n...
+    S> HTTP 404 Not Found
+    ...
 
-** Replay **
+* Replay
 
-   C> GET /abc.tar.gz HTTP/1.1\r\n..
-   S> HTTP 200 Found
+    C> GET /abc.tar.gz HTTP/1.1\r\n..
+    S> HTTP 200 Found
 
-== Getting Started ==
+Getting Started
+---------------
 
-./wireplay -K --role client --port 80 --target 127.0.0.1 -L -F ./pcap/http.dump
+    ./wireplay -K --role client --port 80 --target 127.0.0.1 -L -F ./pcap/http.dump
 
 The above runs wireplay with TCP checksum calculation disabled, replaying an
 HTTP session from ./pcap/http.dump file.
 
-./wireplay --role client -F ./pcap/dcedump.dump --target 172.16.34.129 --port 135
+    ./wireplay --role client -F ./pcap/dcedump.dump --target 172.16.34.129 --port 135
 
 The above example reads a dcedump (Dave Aitel's dcedump) session from the file
 dcedump.dump (pcap dump file) and replays it.
 
-= What to do with it? =
+What to do with it?
+-------------------
 
-   * Fuzzing for Security Bugs
-	* General Software Testing
-	* Being cool..
+ * Fuzzing for Security Bugs
+ * General Software Testing
+ * Being cool..
 
-= Ruby Interface =
+Ruby Interface
+--------------
 
 First: In order to have a real life example of Wireplay hooking capability and
 usage, take a look at hooks/rbhooks/cgen.rb
@@ -62,19 +66,20 @@ Example:
 
    Have a look at hooks/rbhooks/*.rb for an idea
 
-= Notes =
+Notes
+-----
 
-   * libnids-1.23 had does not set certain pointers to NULL during nids_exit()
-     and hence refers to invalid free'd memory during next nids_init() and tcp
-     capture and crashes. The patched version of libnids in the $(pwd) needs to
-     be used until it is fixed upstream.
+ * libnids-1.23 had does not set certain pointers to NULL during nids_exit()
+   and hence refers to invalid free'd memory during next nids_init() and tcp
+   capture and crashes. The patched version of libnids in the $(pwd) needs to
+   be used until it is fixed upstream.
 
-   * TCP Checksum Offloading: Modern NIC hardwares support TCP/UDP checksum
-     calculation in hardware. So OS Network Stack might write packets to NIC
-     with incorrect/null checksum expecting the NIC to calculate and re-write
-     appropriate checksum before xmit. As a result sniffed TCP packets might
-     have incorrect checksums which won't be picked up by NIDS unless
-     checksumming is disabled.
+ * TCP Checksum Offloading: Modern NIC hardwares support TCP/UDP checksum
+   calculation in hardware. So OS Network Stack might write packets to NIC
+   with incorrect/null checksum expecting the NIC to calculate and re-write
+   appropriate checksum before xmit. As a result sniffed TCP packets might
+   have incorrect checksums which won't be picked up by NIDS unless
+   checksumming is disabled.
 
-     For modern hardwares, its safe to run wireplay with -K to disabled NIDS
-     checksuming by default.
+ * For modern hardwares, its safe to run wireplay with -K to disabled NIDS
+   checksuming by default.
