@@ -28,6 +28,33 @@ say:
     C> GET /abc.tar.gz HTTP/1.1\r\n..
     S> HTTP 200 Found
 
+Options
+--------
+
+user@linux$ ./wireplay
+Wireplay - The TCP Replay Tool v0.2
+
+    Options:
+            -r       --role    [ROLE]       Specify the role to play (client/server)
+            -F       --file    [FILE]       Specify the pcap dump file to read packets
+            -t       --target  [TARGET]     Specify the target IP to connect to when in client role
+            -p       --port    [PORT]       Specify the port to connect/listen
+            -S       --shost   [SOURCE]     Specify the source host for session selection
+            -D       --dhost   [DEST]       Specify the destination host for session selection
+            -E       --sport   [SPORT]      Specify the source port for session selection
+            -G       --dport   [DPORT]      Specify the destination port for session selection
+            -n       --isn     [ISN]        Specify the TCP ISN for session selection
+            -c       --count   [NUMBER]     Specify the number of times to repeat the replay
+            -H       --hook    [FILE]       Specify the Ruby script to load as hook
+            -L       --log                  Enable logging of data sent/receive
+            -K       --disable-checksum     Disable NIDS TCP checksum verification
+            -T       --timeout [MS]         Set socket read timeout in microsecond
+            -Q       --simulate             Simulate Socket I/O only, do not send/recv
+
+
+    In case the --shost && --dhost && --isn && --sport && --dport parameters are not supplied,
+    the program will load all the TCP sessions from file and ask the user to select a session to replay
+
 Getting Started
 ---------------
 
@@ -65,6 +92,54 @@ Example:
    occurrance of specific events like sending data, received data, error etc.
 
    Have a look at hooks/rbhooks/*.rb for an idea
+
+Example Ruby Hook
+-----------------
+    class MySampleHook
+
+      def initialize
+        puts ">> MySampleHook initialized"
+      end
+
+      def on_start(desc)
+        puts ">> MySampleHook start (desc: #{desc.inspect})"
+      end
+
+      # 
+      # If this method returns nil, then Wireplay assumes data
+      # is not changed. If it returns a string, then Wireplay
+      # sends the string instead of the original data
+      #
+      def on_data(desc, direction, data)
+        puts ">> MySampleHook data (desc: #{desc.inspect})"
+        puts ">> MySampleHook data (direction: #{direction})"
+        puts ">> MySampleHook data (data size: #{data.size})"
+      end
+
+      def on_stop(desc)
+        puts ">> MySampleHook stop (desc: #{desc.inspect})"
+        end
+      end
+
+    Wireplay::Hooks.register(MySampleHook.new)
+
+As you can see, desc is sent to every event handler method in the above example. desc is actually a
+Ruby OpenStruct? object, created in C-land and is similar to the example below:
+
+    irb(main):002:0> desc = OpenStruct.new
+    => #<OpenStruct>
+    irb(main):003:0> desc.host = "192.168.0.2"
+    => "192.168.0.2"
+    irb(main):004:0> desc.port = 80
+    => 80
+    irb(main):005:0> desc.run_count = 10
+    => 10
+    irb(main):006:0> desc.role = 1
+    => 1
+    irb(main):007:0> desc.inspect
+    => "#<OpenStruct host=\"192.168.0.2\", port=80, run_count=10, role=1>"
+
+
 
 Notes
 -----
